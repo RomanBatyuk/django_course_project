@@ -1,0 +1,17 @@
+SECRET_KEY=Ваш секретный ключ
+DEBUG=установите True, если нужна отладака
+
+NAME=имя вашей базы данных
+USER=имя пользователя PostgreSQL
+PASSWORD=пароль пользователя PostgreSQL
+HOST=адрес сервера базы данных
+PORT=порт, на котором работает PostgreSQL
+
+EMAIL_HOST=ваш EMAIL_HOST
+EMAIL_PORT=ваш EMAIL_PORT
+EMAIL_USE_TLS=EMAIL_USE_TLS(True/False)
+EMAIL_USE_SSL=EMAIL_USE_SSL(True/False)
+EMAIL_HOST_USER=ваша почта
+EMAIL_HOST_PASSWORD=ваш пароль приложения
+
+LOCATION=ваш LOCATION
