@@ -1,0 +1,22 @@
+{% extends "message.html" %}
+
+{% block content %}
+<h1>Сообщения</h1>
+<a href="{% url 'mailings:message_create' %}" class="btn btn-primary mb-3">Добавить сообщение</a>  <!-- Ссылка на создание -->
+<div class="row">
+    {% for object in object_list %}  <!-- object_list — стандарт для ListView -->
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ object.subject_of_the_letter }}</h5>  <!-- Замените на поле вашей модели -->
+                <p class="card-text">{{ object.body_of_the_letter }}</p>
+                <a href="{% url 'mailings:message_edit' object.pk %}" class="btn btn-warning">Редактировать</a>
+                <a href="{% url 'mailings:message_delete' object.pk %}" class="btn btn-danger">Удалить</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>Сообщений нет.</p>
+    {% endfor %}
+</div>
+{% endblock %}
