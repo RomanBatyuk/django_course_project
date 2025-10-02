@@ -1,7 +1,6 @@
 import os
 
 from django.contrib import messages
-from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
@@ -9,16 +8,13 @@ from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views import View
 from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from mailings.forms import MailingForm, MailingRecipientForm, MessageForm
-from mailings.models import (Mailing, Mailing_attempt, Mailing_recipient,
-                             Message)
+from mailings.models import Mailing, Mailing_attempt, Mailing_recipient, Message
 from mailings.services import can_manage_own, can_view_all, is_user_manager
-from users.models import CustomUser
 
 
 def send_mailing_view(request, mailing_id):
@@ -351,85 +347,3 @@ class Mailing_recipientDeleteView(LoginRequiredMixin, DeleteView):
         if not can_manage_own(self.request.user, obj):
             raise PermissionDenied("Вы можете удалять только своих получателей.")
         return obj
-
-
-User = get_user_model()
-
-
-# 1. Просмотр списка пользователей (только для менеджеров)
-class UserListView(LoginRequiredMixin, ListView):
-    model = CustomUser
-    template_name = "user_list.html"
-    context_object_name = "users"
-    paginate_by = 10
-
-    def dispatch(self, request, *args, **kwargs):
-        if not is_user_manager(request.user):
-            raise PermissionDenied("Доступ только для менеджеров.")
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_queryset(self):
-        # Показываем всех пользователей, кроме самого менеджера (опционально)
-        return User.objects.exclude(pk=self.request.user.pk).order_by("username")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["total_users"] = User.objects.count()
-        context["is_manager"] = self.request.user.groups.filter(
-            name="Менеджер"
-        ).exists()
-        return context
-
-
-# 2. Блокировка/разблокировка пользователя (toggle is_active)
-class ToggleUserActiveView(LoginRequiredMixin, View):
-
-    def get(self, request, *args, **kwargs):
-        if not is_user_manager(request.user):
-            raise PermissionDenied("Доступ только для менеджеров.")
-
-        # Получаем пользователя по pk из URL
-        user = CustomUser.objects.get(pk=kwargs["pk"])
-
-        # Не даём блокировать самого себя
-        if user == request.user:
-            messages.error(request, "Нельзя блокировать самого себя.")
-            return redirect("mailings:user_list")
-
-        # Toggle: меняем is_active на противоположное
-        user.is_active = not user.is_active
-        user.save()
-
-        # Сообщение
-        status = "заблокирован" if not user.is_active else "разблокирован"
-        messages.success(request, f"Пользователь {user.username} {status}.")
-
-        # Редирект на список
-        return redirect("mailings:user_list")
-
-
-# 3. Отключение/включение рассылок для пользователя (toggle is_mailing_active)
-class ToggleUserMailingView(LoginRequiredMixin, View):
-
-    def get(self, request, *args, **kwargs):
-        if not is_user_manager(request.user):
-            raise PermissionDenied("Доступ только для менеджеров.")
-
-        # Получаем пользователя по pk из URL
-        user = CustomUser.objects.get(pk=kwargs["pk"])
-
-        # Не даём изменять свои рассылки таким способом
-        if user == request.user:
-            messages.error(request, "Нельзя изменять свои рассылки таким способом.")
-            return redirect("mailings:user_list")
-
-        # Toggle: меняем is_mailing_active на противоположное
-        user.is_mailing_active = not user.is_mailing_active
-        user.save()
-
-        # Сообщение
-        status = "отключены" if not user.is_mailing_active else "включены"
-        messages.success(request, f"Рассылки для {user.username} {status}.")
-
-        # Редирект на список
-        return redirect("mailings:user_list")

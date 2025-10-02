@@ -1,10 +1,14 @@
-from django.contrib.auth.views import (LoginView, LogoutView,
-                                       PasswordResetCompleteView,
-                                       PasswordResetConfirmView,
-                                       PasswordResetDoneView,
-                                       PasswordResetView)
+from django.contrib.auth.views import (
+    LoginView,
+    LogoutView,
+    PasswordResetCompleteView,
+    PasswordResetConfirmView,
+    PasswordResetDoneView,
+    PasswordResetView,
+)
 from django.urls import path, reverse_lazy
 
+from users import views
 from users.views import ProfileDetailView, ProfileUpdateView, RegisterView
 
 app_name = "users"
@@ -46,4 +50,15 @@ urlpatterns = [
     ),
     path("profile/", ProfileDetailView.as_view(), name="profile_detail"),
     path("profile/edit/", ProfileUpdateView.as_view(), name="profile_edit"),
+    path("users/", views.UserListView.as_view(), name="user_list"),
+    path(
+        "users/<int:pk>/toggle-active/",
+        views.ToggleUserActiveView.as_view(),
+        name="toggle_user_active",
+    ),
+    path(
+        "users/<int:pk>/toggle-mailing/",
+        views.ToggleUserMailingView.as_view(),
+        name="toggle_user_mailing",
+    ),
 ]

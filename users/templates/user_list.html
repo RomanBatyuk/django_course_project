@@ -45,8 +45,8 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <a href="{% url 'mailings:toggle_user_active' user.pk %}" class="btn btn-sm btn-secondary">Блокировка пользователя</a>
-                                <a href="{% url 'mailings:toggle_user_mailing' user.pk %}" class="btn btn-sm btn-info">Отключение рассылки</a>
+                                <a href="{% url 'users:toggle_user_active' user.pk %}" class="btn btn-sm btn-secondary">Блокировка пользователя</a>
+                                <a href="{% url 'users:toggle_user_mailing' user.pk %}" class="btn btn-sm btn-info">Отключение рассылки</a>
                             </td>
                         </tr>
                     {% empty %}

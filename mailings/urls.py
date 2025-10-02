@@ -1,16 +1,24 @@
 from django.urls import path
 
 from mailings.apps import MailingsConfig
-from mailings.views import (Mailing_recipientCreateView,
-                            Mailing_recipientDeleteView,
-                            Mailing_recipientDetailView,
-                            Mailing_recipientListView,
-                            Mailing_recipientUpdateView, MailingCreateView,
-                            MailingDeleteView, MailingDetailView,
-                            MailingListView, MailingUpdateView,
-                            MessageCreateView, MessageDeleteView,
-                            MessageDetailView, MessageListView,
-                            MessageUpdateView, mailing_statistics_view)
+from mailings.views import (
+    Mailing_recipientCreateView,
+    Mailing_recipientDeleteView,
+    Mailing_recipientDetailView,
+    Mailing_recipientListView,
+    Mailing_recipientUpdateView,
+    MailingCreateView,
+    MailingDeleteView,
+    MailingDetailView,
+    MailingListView,
+    MailingUpdateView,
+    MessageCreateView,
+    MessageDeleteView,
+    MessageDetailView,
+    MessageListView,
+    MessageUpdateView,
+    mailing_statistics_view,
+)
 
 from . import views
 
@@ -49,17 +57,6 @@ urlpatterns = [
         "recipient/<int:pk>/delete",
         Mailing_recipientDeleteView.as_view(),
         name="recipient_delete",
-    ),
-    path("users/", views.UserListView.as_view(), name="user_list"),
-    path(
-        "users/<int:pk>/toggle-active/",
-        views.ToggleUserActiveView.as_view(),
-        name="toggle_user_active",
-    ),
-    path(
-        "users/<int:pk>/toggle-mailing/",
-        views.ToggleUserMailingView.as_view(),
-        name="toggle_user_mailing",
     ),
     path("statistics/", mailing_statistics_view, name="mailing_statistics"),
 ]
