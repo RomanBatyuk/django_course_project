@@ -1,0 +1,16 @@
+{% extends 'recipient.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">{{ object.headline }}</h1>
+    <p>Вы уверены, что хотите удалить получателя рассылки?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-danger">Удалить</button>
+            <a href="{% url 'mailings:recipient_list' %}" class="btn btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

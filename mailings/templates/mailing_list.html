@@ -1,0 +1,26 @@
+{% extends "mailing.html" %}
+
+{% block content %}
+<h1>Рассылки</h1>
+<a href="{% url 'mailings:mailing_create' %}" class="btn btn-primary mb-3">Создать рассылку</a>  <!-- Ссылка на создание новой рассылки (без ID) -->
+<div class="row">
+    {% for object in object_list %}  <!-- object_list — стандарт для ListView -->
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ object.status }}</h5>  <!-- Поле вашей модели -->
+                <p class="card-text">{{ object.recipients }}</p>
+                <p class="card-text">{{ object.message }}</p>
+                {% if object.pk %}  <!-- Проверка, что объект сохранён в БД и имеет pk -->
+                    <a href="{% url 'mailings:send_mailing' object.pk %}" class="btn btn-success">Отправить рассылку</a>
+                {% endif %}
+                <a href="{% url 'mailings:mailing_edit' object.pk %}" class="btn btn-warning">Редактировать</a>
+                <a href="{% url 'mailings:mailing_delete' object.pk %}" class="btn btn-danger">Удалить</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>Рассылок нет.</p>
+    {% endfor %}
+</div>
+{% endblock %}

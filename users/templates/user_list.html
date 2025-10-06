@@ -1,0 +1,79 @@
+{% extends "main.html" %}
+
+{% block content %}
+    <!-- Messages в начале блока content -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Основной контент: проверка на менеджера -->
+    {% if user.is_authenticated and is_manager %}
+        <h1 class="mb-4 text-light">Пользователей сервиса (Всего: {{ total_users }})</h1>
+
+
+        <!-- Таблица с тёмной темой для контраста с фоном главной страницы -->
+        <div class="table-responsive">
+            <table class="table table-striped table-dark table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Имя</th>
+                        <th>Email</th>
+                        <th>Статус</th>
+                        <th>Рассылки</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if user.is_active %}
+                                    <span class="badge bg-success">Активен</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Заблокирован</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if user.is_mailing_active %}
+                                    <span class="badge bg-success">Включены</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Отключены</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'users:toggle_user_active' user.pk %}" class="btn btn-sm btn-secondary">Блокировка пользователя</a>
+                                <a href="{% url 'users:toggle_user_mailing' user.pk %}" class="btn btn-sm btn-info">Отключение рассылки</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="5" class="text-center text-muted">Пользователей нет.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center mt-3">
+        <a href="{% url 'mailings:main' %}" class="btn btn-secondary">Назад</a>
+        </div>
+
+        <!-- Пагинация, если paginate_by > 0 -->
+        {% if is_paginated %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link bg-dark text-light border-secondary" href="?page={{ page_obj.previous_page_number }}">Предыдущая</a></li>
+                    {% endif %}
+                    <li class="page-item active"><span class="page-link bg-primary text-light">{{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span></li>
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link bg-dark text-light border-secondary" href="?page={{ page_obj.next_page_number }}">Следующая</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% else %}
+        <p class="text-light">Доступ запрещён.</p>
+    {% endif %}
+{% endblock %}

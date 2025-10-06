@@ -1,0 +1,22 @@
+{% extends 'mailing.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">
+                    {% if object %}
+                    Сохранить
+                    {% else %}
+                    Создать рассылку
+                    {% endif %}
+                </button>
+                <a href="{% url 'mailings:mailing_list' %}" class="btn btn-secondary">Отмена</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "recipient.html" %}
+
+{% block content %}
+<h1>Получатели рассылки</h1>
+<a href="{% url 'mailings:recipient_create' %}" class="btn btn-primary mb-3">Добавить получателя расылки</a>  <!-- Ссылка на создание -->
+<div class="row">
+    {% if user.is_authenticated %}
+    {% for object in object_list %}  <!-- object_list — стандарт для ListView -->
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ object.email }}</h5>
+                <p class="card-text">{{ object.full_name }}</p>
+                <p class="card-text">{{ object.comment }}</p>
+                <a href="{% url 'mailings:recipient_edit' object.pk %}" class="btn btn-warning">Редактировать</a>
+                <a href="{% url 'mailings:recipient_delete' object.pk %}" class="btn btn-danger">Удалить</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>Сообщений нет.</p>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

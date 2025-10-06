@@ -1,0 +1,69 @@
+{% extends 'main.html' %}
+{% block content %}
+    {% if user.is_authenticated %}
+    <h1>Персональная статистика рассылок</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-4 mb-3">
+            <div class="card bg-dark text-white border-secondary">
+                <div class="card-body">
+                    <h5 class="card-title">Всего рассылок</h5>
+                    <p class="card-text fs-4">{{ total_mailings }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card bg-dark text-white border-secondary">
+                <div class="card-body">
+                    <h5 class="card-title">Активных рассылок</h5>
+                    <p class="card-text fs-4">{{ active_mailings }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card bg-dark text-white border-secondary">
+                <div class="card-body">
+                    <h5 class="card-title">Уникальных получателей</h5>
+                    <p class="card-text fs-4">{{ unique_recipients }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Новые карточки -->
+        <div class="col-md-4 mb-3">
+            <div class="card bg-dark text-white border-secondary">
+                <div class="card-body">
+                    <h5 class="card-title">Успешных попыток рассылок</h5>
+                    <p class="card-text fs-4">{{ successful_attempts }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card bg-dark text-white border-secondary">
+                <div class="card-body">
+                    <h5 class="card-title">Неуспешных попыток рассылок</h5>
+                    <p class="card-text fs-4">{{ unsuccessful_attempts }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card bg-dark text-white border-secondary">
+                <div class="card-body">
+                    <h5 class="card-title">Отправленных сообщений</h5>
+                    <p class="card-text fs-4">{{ sent_messages }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Кнопка "Назад" на main, как в других шаблонах -->
+    <div class="text-center mt-3">
+        <a href="{% url 'mailings:main' %}" class="btn btn-secondary">Назад</a>
+    </div>
+    {% else %}
+    <h1>Авторизуйтесь или зарегистрируйтесь и создайте свои рассылки. Тогда они отобразятся тут.</h1>
+    {% endif %}
+{% endblock %}
