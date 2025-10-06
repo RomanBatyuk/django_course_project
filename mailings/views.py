@@ -64,6 +64,10 @@ def main_view(request):
     """Главная страница со статистикой рассылок и списком рассылок."""
     user = request.user
 
+    # Проверка на наличие данных в БД
+    if not Mailing.objects.exists():
+        return render(request, 'empty_db.html')
+
     # Проверки прав доступа
     if is_user_manager(user):
         # Менеджер: видит все рассылки в списке, но статистика только своя
